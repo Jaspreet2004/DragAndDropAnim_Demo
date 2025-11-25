@@ -101,17 +101,14 @@ fun DragAndDropBoxes(modifier: Modifier = Modifier) {
                         enter = scaleIn() + fadeIn(),
                         exit = scaleOut() + fadeOut()
                     ) {
-                        Text(
-                            text = "Right",
-                            fontSize = 40.sp,
-                            color = Color.Red,
-                            fontWeight = FontWeight.Bold,
-
+                        Icon(
+                            imageVector = Icons.Default.Face,
+                            contentDescription = "Drag icon",
                             modifier = Modifier
                                 .fillMaxSize()
                                 .dragAndDropSource {
                                     detectTapGestures(
-                                        onLongPress = { offset ->
+                                        onLongPress = {
                                             startTransfer(
                                                 transferData = DragAndDropTransferData(
                                                     clipData = ClipData.newPlainText(
