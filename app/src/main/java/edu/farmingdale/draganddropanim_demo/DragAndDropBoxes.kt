@@ -52,13 +52,13 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.size
+import androidx.compose.animation.core.*
 
 //private val rotation = FloatPropKey()
 
-
 @Composable
 fun DragAndDropBoxes(modifier: Modifier = Modifier) {
-    var isPlaying by remember { mutableStateOf(true) }
+    var isPlaying by remember { mutableStateOf(false) }
     Column(modifier = Modifier.fillMaxSize()) {
 
         Row(
@@ -126,22 +126,31 @@ fun DragAndDropBoxes(modifier: Modifier = Modifier) {
             }
         }
 
-
         val pOffset by animateIntOffsetAsState(
-            targetValue = when (isPlaying) {
-                true -> IntOffset(130, 300)
-                false -> IntOffset(130, 100)
+            targetValue = if (isPlaying) {
+                IntOffset(200, 140)
+            } else {
+                IntOffset(60, 60)
             },
-            animationSpec = tween(3000, easing = LinearEasing)
-        )
-
-        val rtatView by animateFloatAsState(
-            targetValue = if (isPlaying) 360f else 0f,
             animationSpec = tween(
                 durationMillis = 1000,
                 easing = LinearEasing
             )
         )
+
+        val infiniteTransition = rememberInfiniteTransition()
+        val rectRotation by infiniteTransition.animateFloat(
+            initialValue = 0f,
+            targetValue = 360f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(
+                    durationMillis = 2000,
+                    easing = LinearEasing
+                ),
+                repeatMode = RepeatMode.Restart
+            )
+        )
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -153,10 +162,9 @@ fun DragAndDropBoxes(modifier: Modifier = Modifier) {
                     .padding(10.dp)
                     .offset(pOffset.x.dp, pOffset.y.dp)
                     .size(80.dp)
-                    .rotate(rtatView)
+                    .rotate(rectRotation)
                     .background(Color.Yellow)
             )
         }
     }
 }
-
