@@ -136,12 +136,10 @@ fun DragAndDropBoxes(modifier: Modifier = Modifier) {
         )
 
         val rtatView by animateFloatAsState(
-            targetValue = if (isPlaying) 360f else 0.0f,
-            // Configure the animation duration and easing.
-            animationSpec = repeatable(
-                iterations = if (isPlaying) 10 else 1,
-                tween(durationMillis = 3000, easing = LinearEasing),
-                repeatMode = RepeatMode.Restart
+            targetValue = if (isPlaying) 360f else 0f,
+            animationSpec = tween(
+                durationMillis = 1000,
+                easing = LinearEasing
             )
         )
         Box(
