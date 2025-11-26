@@ -60,6 +60,20 @@ import androidx.compose.material3.Button
 @Composable
 fun DragAndDropBoxes(modifier: Modifier = Modifier) {
     var isPlaying by remember { mutableStateOf(false) }
+    var dropDirection by remember { mutableIntStateOf(0) }
+
+    val infiniteTransition = rememberInfiniteTransition()
+    val rectRotation by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(
+                durationMillis = 2000,
+                easing = LinearEasing
+            )
+        )
+    )
+
     Column(modifier = Modifier.fillMaxSize()) {
 
         Row(
@@ -90,6 +104,15 @@ fun DragAndDropBoxes(modifier: Modifier = Modifier) {
                                     override fun onDrop(event: DragAndDropEvent): Boolean {
                                         isPlaying = !isPlaying
                                         dragBoxIndex = index
+
+                                        dropDirection = when (index) {
+                                            0 -> 1 // up
+                                            1 -> 2 // down
+                                            2 -> 3 // left
+                                            3 -> 4 // right
+                                            else -> 0
+                                        }
+
                                         return true
                                     }
                                 }
@@ -128,27 +151,16 @@ fun DragAndDropBoxes(modifier: Modifier = Modifier) {
         }
 
         val pOffset by animateIntOffsetAsState(
-            targetValue = if (isPlaying) {
-                IntOffset(60, 40)
-            } else {
-                IntOffset(0, 0)
+            targetValue = when (dropDirection) {
+                1 -> IntOffset(0, -80) // up
+                2 -> IntOffset(0, 80)  // down
+                3 -> IntOffset(-80, 0) // left
+                4 -> IntOffset(80, 0)  // right
+                else -> IntOffset(0, 0) // center
             },
             animationSpec = tween(
                 durationMillis = 1000,
                 easing = LinearEasing
-            )
-        )
-
-        val infiniteTransition = rememberInfiniteTransition()
-        val rectRotation by infiniteTransition.animateFloat(
-            initialValue = 0f,
-            targetValue = 360f,
-            animationSpec = infiniteRepeatable(
-                animation = tween(
-                    durationMillis = 2000,
-                    easing = LinearEasing
-                ),
-                repeatMode = RepeatMode.Restart
             )
         )
 
@@ -169,6 +181,7 @@ fun DragAndDropBoxes(modifier: Modifier = Modifier) {
 
             Button(
                 onClick = {
+                    dropDirection = 0
                     isPlaying = false
                 },
                 modifier = Modifier
