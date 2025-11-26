@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.size
 import androidx.compose.animation.core.*
+import androidx.compose.material3.Button
 
 //private val rotation = FloatPropKey()
 
@@ -128,9 +129,9 @@ fun DragAndDropBoxes(modifier: Modifier = Modifier) {
 
         val pOffset by animateIntOffsetAsState(
             targetValue = if (isPlaying) {
-                IntOffset(200, 140)
+                IntOffset(60, 40)
             } else {
-                IntOffset(60, 60)
+                IntOffset(0, 0)
             },
             animationSpec = tween(
                 durationMillis = 1000,
@@ -155,16 +156,31 @@ fun DragAndDropBoxes(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(0.8f)
-                .background(Color.Red)
+                .background(Color.Red),
+            contentAlignment = Alignment.Center
         ) {
             Box(
                 modifier = Modifier
-                    .padding(10.dp)
                     .offset(pOffset.x.dp, pOffset.y.dp)
                     .size(80.dp)
                     .rotate(rectRotation)
                     .background(Color.Yellow)
             )
+
+            Button(
+                onClick = {
+                    isPlaying = false
+                },
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(16.dp)
+            ) {
+                Text(
+                    text = "Reset",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
     }
 }
